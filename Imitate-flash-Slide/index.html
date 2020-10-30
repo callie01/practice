@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片切换效果</title>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <script src="index.js"></script>
+    <script>
+      //获取元素
+      function getByClass(oParent, sClass) {
+        var aEle = oParent.getElementsByTagName("*");
+        var aResult = [];
+
+        for (var i = 0; i < aEle.length; i++) {
+          if (aEle[i].className == sClass) {
+            aResult.push(aEle[i]);
+          }
+        }
+        return aResult;
+      }
+      //加载
+      window.onload = function () {
+        var oDiv1 = document.getElementById("wrapper");
+        //左右切换按钮
+        var oBtnLeft = getByClass(oDiv1, "icon_left")[0];
+        var oBtnRight = getByClass(oDiv1, "icon_right")[0];
+        var oMarkLeft = getByClass(oDiv1, "mark_left")[0];
+        var oMarkRight = getByClass(oDiv1, "mark_right")[0];
+
+        //功能1：当鼠标移入大图的左边，则显示按钮
+        oBtnLeft.onmouseover = oMarkLeft.onmouseover = function () {
+          startMove(oBtnLeft, "opacity", 100);
+          oBtnLeft.style.cursor = "pointer";
+        };
+        //移出消失
+        oBtnLeft.onmouseout = oMarkLeft.onmouseout = function () {
+          startMove(oBtnLeft, "opacity", 0);
+        };
+        //鼠标移入右边，显示按钮
+        oBtnRight.onmouseover = oMarkRight.onmouseover = function () {
+          startMove(oBtnRight, "opacity", 100);
+          oBtnRight.style.cursor = "pointer";
+        };
+        //移出消失
+        oBtnRight.onmouseout = oMarkRight.onmouseout = function () {
+          startMove(oBtnRight, "opacity", 0);
+        };
+
+        //功能2：大图切换
+        var oUlBig = getByClass(oDiv1, "big_bg")[0];
+        var aLiBig = oUlBig.getElementsByTagName("li");
+        var oDivSmall = getByClass(oDiv1, "small_bg")[0];
+        var oUlSmall = oDivSmall.getElementsByTagName("ul")[0];
+        var aLiSmall = oDivSmall.getElementsByTagName("li");
+
+        var nowZIndex = 2;
+        var now = 0;
+
+        //oUlSmall.style.width = aLiSmall.length * aLiSmall[0].offsetWidth + "px";
+
+        //2.1给小图加上点击事件
+        for (var i = 0; i < aLiSmall.length; i++) {
+          //小图添加鼠标移入移出效果
+          aLiSmall[i].onmouseover = function () {
+            startMove(this, "opacity", 100);
+            this.style.cursor = "hand";
+            this.style.cursor = "pointer";
+          };
+          aLiSmall[i].onmouseout = function () {
+            if (this.index != now) {
+              startMove(this, "opacity", 60);
+            }
+          };
+          aLiSmall[i].index = i;
+          aLiSmall[i].onclick = function () {
+            //消除重复点击
+            if (this.index == now) return;
+            now = this.index;
+            tab();
+          };
+          //
+          function tab() {
+            //1.利用z-index切换大图
+            aLiBig[now].style.zIndex = nowZIndex++;
+
+            //2.1先将全部小图透明度设为0.6
+            for (var i = 0; i < aLiSmall.length; i++) {
+              startMove(aLiSmall[i], "opacity", 60);
+            }
+            //2.2后设置当前点击的小图透明度为1
+            startMove(aLiSmall[now], "opacity", 100);
+
+            //3.大图，切换下拉效果
+            aLiBig[now].style.height = 0;
+            startMove(aLiBig[now], "height", 450);
+
+            //4.小图，点击后向左移动
+            if (now < 4) {
+              startMove(oUlSmall, "left", 0);
+            } else if (now > aLiSmall.length - 4) {
+              startMove(oUlSmall, "left", -2 * aLiSmall[0].offsetWidth);
+            } else {
+              startMove(oUlSmall, "left", -(now - 3) * aLiSmall[0].offsetWidth);
+            }
+          }
+        }
+        //大图，左右换图按钮
+        oMarkLeft.onclick = oBtnLeft.onclick = function () {
+          now--;
+          if (now == -1) {
+            now = aLiSmall.length - 1;
+          }
+          tab();
+        };
+        oMarkRight.onclick = oBtnRight.onclick = function () {
+          now++;
+          if (now == aLiSmall.length) {
+            now = 0;
+          }
+          tab();
+        };
+
+        //自动播放
+        var timer = setInterval(oBtnRight.onclick, 3000);
+        //鼠标移入关闭定时器
+        oUlBig.onmouseover = function () {
+          clearInterval(timer);
+        };
+        oUlBig.onmouseout = function () {
+          timer = setInterval(oBtnRight.onclick, 3000);
+        };
+      };
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <!--功能框-->
+      <div id="header">
+        <div class="left">
+          <img src="images/tx.jpg" />
+          <b>Callie</b>
+          <input type="button" value="关注" />
+        </div>
+        <div class="right">
+          <div><img src="images/dianzan.png" alt="" />点赞</div>
+          <div><img src="images/zhaunfa.png" alt="" />分享</div>
+          <div><img src="images/shoucang.png" alt="" />收藏</div>
+        </div>
+      </div>
+      <!--浏览大图-->
+      <div class="big_bg">
+        <ul>
+          <div class="icon_left"></div>
+          <div class="icon_right"></div>
+
+          <a class="mark_left" href="javascript:;"></a>
+          <a class="mark_right" href="javascript:;"></a>
+
+          <li style="z-index: 1;"><img src="images/1.jpg" /></li>
+          <li><img src="images/2.jpg" /></li>
+          <li><img src="images/3.jpg" /></li>
+          <li><img src="images/4.jpg" /></li>
+          <li><img src="images/5.jpg" /></li>
+          <li><img src="images/6.jpg" /></li>
+          <li><img src="images/7.jpg" /></li>
+          <li><img src="images/8.jpg" /></li>
+          <li><img src="images/9.jpg" /></li>
+        </ul>
+      </div>
+      <!--轮换图小图-->
+      <div class="small_bg">
+        <ul>
+          <li style="opacity: 1;"><img src="images/1.jpg" alt="" /></li>
+          <li><img src="images/2.jpg" alt="" /></li>
+          <li><img src="images/3.jpg" alt="" /></li>
+          <li><img src="images/4.jpg" alt="" /></li>
+          <li><img src="images/5.jpg" alt="" /></li>
+          <li><img src="images/6.jpg" alt="" /></li>
+          <li><img src="images/7.jpg" alt="" /></li>
+          <li><img src="images/8.jpg" alt="" /></li>
+          <li><img src="images/9.jpg" alt="" /></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+.wrapper {
+  width: 1000px;
+  height: 300px;
+  position: absolute;
+  top: 50px;
+  left: 18%;
+  overflow: hidden;
+}
+ol {
+  position: absolute;
+  top: 265px;
+  right: 100px;
+  z-index: 50;
+}
+ol li {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background: rgb(252, 236, 215);
+  border: 1px solid rgb(161, 91, 25);
+  color: rgb(173, 114, 58);
+  text-align: center;
+  float: left;
+  margin-left: 5px;
+  z-index: 50;
+  cursor: pointer;
+}
+.active {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background: rgb(199, 141, 65);
+  border: 1.5px solid white;
+  color: white;
+  text-align: center;
+  float: left;
+  margin-left: 5px;
+  z-index: 50;
+  cursor: pointer;
+  list-style: none;
+}
+img {
+  width: 1000px;
+  height: 300px;
+}
+ul {
+  position: absolute;
+}
+ul li {
+  width: 1000px;
+  height: 300px;
+}
