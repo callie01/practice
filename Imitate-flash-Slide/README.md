@@ -19,5 +19,4 @@
 ## 预览：
 
 ![img1](https://raw.githubusercontent.com/callie01/practice/main/Imitate-flash-Slide/images/img1.png)
-![img1](./images/img1.png)
 
